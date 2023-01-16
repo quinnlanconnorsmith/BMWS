@@ -1,4 +1,4 @@
-id,lake,date,hour,yday,month,day,year,month_day,littoral_meantemp,0.5,1
+id,lake,date,hour,yday,month,day,year,month_day,littoral ,pelagic_05,pelagic_1
 MCD6_2017,MCD,5/26/2017,0,146,5,26,2017,5_26,14.565,15.855,13.606
 MCD6_2017,MCD,5/26/2017,1,146,5,26,2017,5_26,14.469,15.76,13.461
 MCD6_2017,MCD,5/26/2017,2,146,5,26,2017,5_26,14.3255,15.6165,13.558
