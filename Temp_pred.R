@@ -1,3 +1,4 @@
+####Exploratory####
 getwd()
 library(tidyverse)
 library(ggplot2)
@@ -106,4 +107,104 @@ hobo_mcd_up_w = wide_hobo_mcd_up %>%
 
 lm <- lm(1~littoral_meantemp, hobo_mcd_up_w)
 
-write.csv(hobo_mcd_up_w, "C:\\Users\\Quinn\\Documents\\R\\BMWS")
+write.csv(hobo_mcd_up_w, "C:\\Users\\Quinn\\Documents\\R\\BMWS\\hobo_mcd_up_w.csv", row.names = FALSE)
+
+####mcd_lit_pel dataset####
+
+mcd_lit_pel_temp$hourcos <- cos(mcd_lit_pel_temp$hour)
+
+ggplot(data=mcd_lit_pel_temp) +
+  geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
+  geom_abline(y=1)
+
+ggplot(data=mcd_lit_pel_temp) +
+  geom_point(mapping = aes(x = pelagic_1, y =littoral)) +
+  geom_abline(y=1) +
+  facet_wrap(~ hour)
+
+hobo_mcd_4x
+
+
+ggplot(data = mcd_lit_pel_temp) + 
+  geom_point(mapping = aes(x = yday, y =littoral, color=year))
+
+ggplot(data = mcd_lit_pel_temp) + 
+  geom_point(mapping = aes(x = yday, y = pelagic_05, color=year))
+
+ggplot(data = mcd_lit_pel_temp) + 
+  geom_point(mapping = aes(x = yday, y =pelagic_1, color=year))
+
+#Hella ella 
+#The above are standardized to same days/year 
+#JD 146-252 for 2017, 2018, and 2019 
+
+#Beginning with linear models 
+
+#Littoral
+lm_lit <- lm(littoral~yday+year, data=mcd_lit_pel_temp)
+summary(lm_lit)
+plot(lm_lit$residuals)
+
+#Pelagic 0.5
+lm_pel05 <- lm(pelagic_05~yday+year, data=mcd_lit_pel_temp)
+summary(lm_pel05)
+plot(lm_pel05$residuals)
+
+#Pelagic 
+lm_pel1 <- lm(pelagic_1~yday+year, data=mcd_lit_pel_temp)
+summary(lm_pel1)
+plot(lm_pel1$residuals)
+
+#Fairly poor r2 all around, lets try some quadratic regressions 
+
+#mcd_lit_pel_temp$littoral2 <- mcd_lit_pel_temp$littoral^2
+#ggplot(data = mcd_lit_pel_temp) + 
+#  geom_point(mapping = aes(x = yday, y =littoral2, color=year))
+#lm_lit_q <- lm(littoral~yday+littoral2+year, data=mcd_lit_pel_temp)
+#summary(lm_lit_q)
+#plot(lm_lit_q$residuals)
+
+#Major screw around time...
+
+test_lm <- lm(yday~littoral+littoral2+year, data=mcd_lit_pel_temp)
+summary(test_lm)
+#Not what I'm looking for ^ 
+
+mcd_lit_pel_temp$yday2 <- mcd_lit_pel_temp$yday^2
+
+#Try applying quadratic to yday? 
+#I think this is the appropriate way to do it 
+test_lm2 <- lm(littoral~yday+yday2+year, data=mcd_lit_pel_temp)
+summary(test_lm2)
+plot(test_lm2)
+plot(test_lm2$residuals)
+
+#Quadratic regression to littoral, pelagic 0.5, and pelagic 1 
+
+#Littoral
+lm_lit_q <-lm(littoral~yday+yday2+year, data=mcd_lit_pel_temp)
+summary(lm_lit_q)
+plot(lm_lit_q)
+plot(lm_lit_q$residuals)
+
+#Pelagic 0.5
+lm_pel05_q <- lm(pelagic_05~yday+yday2+year, data=mcd_lit_pel_temp)
+summary(lm_pel05_q)
+plot(lm_pel05_q)
+plot(lm_pel05_q$residuals)
+
+#Pelagic 1 
+lm_pel1_q <- lm(pelagic_1~yday+yday2+year, data=mcd_lit_pel_temp)
+summary(lm_pel1_q)
+plot(lm_pel1_q)
+plot(lm_pel1_q$residuals)
+
+#Predicting with models 
+ 
+lm_lit_q2 <-lm(littoral~yday+yday2, data=mcd_lit_pel_temp)
+dayvals <-seq(146,252,1)
+
+day_predict <- predict(lm_lit_q2, list(yday=dayvals, yday2=dayvals^2))
+
+plot(mcd_lit_pel_temp$yday, mcd_lit_pel_temp$pelagic_1)
+lines(dayvals,day_predict, col='red')
