@@ -107,7 +107,7 @@ hobo_mcd_up_w = wide_hobo_mcd_up %>%
 
 lm <- lm(1~littoral_meantemp, hobo_mcd_up_w)
 
-write.csv(hobo_mcd_up_w, "C:\\Users\\Quinn\\Documents\\R\\BMWS\\hobo_mcd_up_w.csv", row.names = FALSE)
+#write.csv(hobo_mcd_up_w, "C:\\Users\\Quinn\\Documents\\R\\BMWS\\hobo_mcd_up_w.csv", row.names = FALSE)
 
 ####mcd_lit_pel dataset####
 
@@ -206,5 +206,56 @@ dayvals <-seq(146,252,1)
 
 day_predict <- predict(lm_lit_q2, list(yday=dayvals, yday2=dayvals^2))
 
-plot(mcd_lit_pel_temp$yday, mcd_lit_pel_temp$pelagic_1)
-lines(dayvals,day_predict, col='red')
+plot(mcd_lit_pel_temp$yday, mcd_lit_pel_temp$pelagic_1, col=mcd_lit_pel_temp$year)
+lines(dayvals,day_predict, col='blue', lwd=5)
+
+#Delving into specific loggers 
+
+
+#ALL 
+ggplot(data=mcd_lit_pel_temp_update) +
+  geom_point(mapping = aes(x = pelagic_1, y =mean_lit, color=hour)) +
+  geom_abline(y=1)
+
+
+#Logger 6 
+ggplot(data=subset(hobo_mcd6_lit_pel, !is.na(year))) +
+  geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
+  facet_wrap(~year)+
+  geom_abline(y=1)
+
+
+#Logger 7 
+ggplot(data=hobo_mcd7_lit_pel) +
+  geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
+  facet_wrap(~year)+
+  geom_abline(y=1)
+
+
+#Logger 8 
+ggplot(data=hobo_mcd8_lit_pel) +
+  geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
+  facet_wrap(~year)+
+  geom_abline(y=1)
+
+#Log 8 in 2019
+
+ggplot(data=hobo_mcd8_lit_pel_2019) +
+  geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
+  facet_wrap(~month)+
+  geom_abline(y=1)
+
+#SAme site, logger 8 in 2020, logger 2 in 2021
+#NOTE: For 2020 only 0.5m pelagic exists, for 2021 only 1m pelagic exists 
+#This is just explroatory 
+ggplot(data=hobo_mcd8_2_post_panini) +
+  geom_point(mapping = aes(x = pelagic, y =littoral_meantemp, color=hour)) +
+  facet_wrap(~year)+
+  geom_abline(y=1)
+
+#Site 2 (same as 6) logger 1 for 2021 
+
+ggplot(data=hobo_mcd1_lit_pel_2021) +
+  geom_point(mapping = aes(x = pelagic, y =littoral_meantemp, color=hour)) +
+  facet_wrap(~month)+
+  geom_abline(y=1)
