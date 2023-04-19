@@ -223,6 +223,22 @@ ggplot(data=subset(hobo_mcd6_lit_pel, !is.na(year))) +
   geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
   facet_wrap(~year)+
   geom_abline(y=1)
+hobo_mcd6_lit_pel$comp <- hobo_mcd6_lit_pel$littoral -hobo_mcd6_lit_pel$pelagic_1
+ggplot(data=hobo_mcd6_lit_pel) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0)
+
+  #log 6 residuals 
+rmod6 <- lm(pelagic_1~littoral, data=hobo_mcd6_lit_pel)
+summary(rmod6)
+hobo_mcd6_lit_pel <-  filter(hobo_mcd6_lit_pel, rowSums(is.na(hobo_mcd6_lit_pel)) != ncol(hobo_mcd6_lit_pel))
+residuals6 <- rstandard(rmod6)
+hobo_mcd6_lit_pel$residuals <- residuals6
+ggplot(data=hobo_mcd6_lit_pel) +
+  geom_point(mapping = aes(x = yday, y =residuals)) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0)
 
 
 #Logger 7 
@@ -230,15 +246,25 @@ ggplot(data=hobo_mcd7_lit_pel) +
   geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
   facet_wrap(~year)+
   geom_abline(y=1)
-
+hobo_mcd7_lit_pel$comp <- hobo_mcd7_lit_pel$littoral -hobo_mcd7_lit_pel$pelagic_1
+ggplot(data=hobo_mcd7_lit_pel) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0)
 
 #Logger 8 
 ggplot(data=hobo_mcd8_lit_pel) +
   geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
   facet_wrap(~year)+
   geom_abline(y=1)
+hobo_mcd8_lit_pel$comp <- hobo_mcd8_lit_pel$littoral -hobo_mcd8_lit_pel$pelagic_1
+ggplot(data=hobo_mcd8_lit_pel) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0) 
+  
 
-#Log 8 in 2019
+#Log 8 in 2019 - deep dive
 
 ggplot(data=hobo_mcd8_lit_pel_2019) +
   geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
@@ -247,11 +273,17 @@ ggplot(data=hobo_mcd8_lit_pel_2019) +
 
 #SAme site, logger 8 in 2020, logger 2 in 2021
 #NOTE: For 2020 only 0.5m pelagic exists, for 2021 only 1m pelagic exists 
-#This is just explroatory 
+#This is just exploratory 
 ggplot(data=hobo_mcd8_2_post_panini) +
   geom_point(mapping = aes(x = pelagic, y =littoral_meantemp, color=hour)) +
   facet_wrap(~year)+
   geom_abline(y=1)
+hobo_mcd8_2_post_panini$comp <- hobo_mcd8_2_post_panini$littoral_meantemp -hobo_mcd8_2_post_panini$pelagic
+ggplot(data=hobo_mcd8_2_post_panini) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0)
+
 
 #Site 2 (same as 6) logger 1 for 2021 
 
@@ -259,3 +291,243 @@ ggplot(data=hobo_mcd1_lit_pel_2021) +
   geom_point(mapping = aes(x = pelagic, y =littoral_meantemp, color=hour)) +
   facet_wrap(~month)+
   geom_abline(y=1)
+
+
+#Making comparison graphs 
+mcd_lit_pel_temp_update$comp <- mcd_lit_pel_temp_update$mean_lit -mcd_lit_pel_temp_update$pelagic_1
+             
+ggplot(data=mcd_lit_pel_temp_update) +
+  geom_point(mapping = aes(x = yday, y =comp, color=as.factor())) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0)
+
+ggplot(data=mcd_lit_pel_temp_update) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0)
+
+ggplot(data=mcd_lit_pel_temp_update) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(id))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0)
+
+
+#Littoral temp residuals 
+
+rmod <- lm(pelagic_1~mean_lit, data=mcd_lit_pel_temp_update)
+summary(rmod)
+residuals <- rstandard(rmod)
+
+mcd_lit_pel_temp_update <-  filter(mcd_lit_pel_temp_update, rowSums(is.na(mcd_lit_pel_temp_update)) != ncol(mcd_lit_pel_temp_update))
+
+mcd_lit_pel_temp_update$residuals <- residuals
+
+ggplot(data=mcd_lit_pel_temp_update) +
+  geom_point(mapping = aes(x = yday, y =residuals, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0)
+
+ggplot(data=mcd_lit_pel_temp_update) +
+  geom_point(mapping = aes(x = pelagic_1, y =residuals, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0)
+
+
+#Zoom in on some daily goodies 
+#Log 8
+
+#Big view 
+
+ggplot(data=subset(hobo_mcd8_lit_pel, !is.na(year))) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0) + 
+  ggtitle("Logger 8")
+
+#Small window
+ggplot(data=subset(hobo_mcd8_lit_pel, !is.na(year))) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0) + 
+  xlim(160,180) + 
+  ggtitle("Logger 8")
+#Log 7
+
+#Big view 
+#Small window 
+ggplot(data=subset(hobo_mcd7_lit_pel, !is.na(year))) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0) +
+  xlim(175, 195) +
+  ggtitle("Logger 7")
+
+#Big view 
+ggplot(data=subset(hobo_mcd6_lit_pel, !is.na(year))) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0) +
+  ggtitle("Logger 6")
+#Small window 
+#Log 6
+ggplot(data=subset(hobo_mcd6_lit_pel, !is.na(year))) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0) +
+  xlim(160,180) + 
+  ggtitle("Logger 6")
+#Just 2019 
+ggplot(data=subset(hobo_mcd6_lit_pel,hobo_mcd6_lit_pel$year =="2019", !is.na(year))) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0) +
+  xlim(140,160) + 
+  ggtitle("Logger 6")
+
+#Just 2019 logger 8
+
+ggplot(data=subset(hobo_mcd8_lit_pel, hobo_mcd8_lit_pel$year =="2019", !is.na(year))) +
+  geom_point(mapping = aes(x = yday, y =comp, color=(hour))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0) + 
+  xlim(160,180) + 
+  ggtitle("Logger 8")
+
+#Some site overlay 
+
+hobo_mcd6_lit_pel$logr <- 6
+hobo_mcd7_lit_pel$logr <- 7
+hobo_mcd8_lit_pel$logr <- 8
+
+#All years, comp per julian day 
+ggplot()+
+  geom_point(data=subset(hobo_mcd6_lit_pel, !is.na(year)), alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_point(data=subset(hobo_mcd7_lit_pel, !is.na(year)),alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_point(data=subset(hobo_mcd8_lit_pel, !is.na(year)), alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0) +
+  ggtitle("Title")
+
+#Log 6/7/8/ 2017 
+ggplot()+
+  geom_point(data=subset(hobo_mcd6_lit_pel, hobo_mcd6_lit_pel$year =="2017", !is.na(year)), alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_point(data=subset(hobo_mcd7_lit_pel, hobo_mcd7_lit_pel$year =="2017", !is.na(year)),alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_point(data=subset(hobo_mcd8_lit_pel, hobo_mcd8_lit_pel$year =="2017",!is.na(year)), alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  facet_wrap(~year)+
+  geom_hline(yintercept=0) +
+  ggtitle("2017 for all 3 logger sites")
+
+#Log6&8 2019 
+ggplot()+
+  geom_point(data=subset(hobo_mcd6_lit_pel, hobo_mcd6_lit_pel$year =="2019", !is.na(year)), alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_point(data=subset(hobo_mcd8_lit_pel, hobo_mcd8_lit_pel$year =="2019", !is.na(year)), alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_hline(yintercept=0) +
+  ggtitle("Logger 6&8 2019")
+
+#xlim
+ggplot()+
+  geom_point(data=subset(hobo_mcd6_lit_pel, hobo_mcd6_lit_pel$year =="2019", !is.na(year)), alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_point(data=subset(hobo_mcd8_lit_pel, hobo_mcd8_lit_pel$year =="2019", !is.na(year)), alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_hline(yintercept=0) +
+  xlim(170,210) +
+  ggtitle("Logger 6&8 2019")
+
+#Pretty plot for the whole year 
+ggplot()+
+  geom_point(data=subset(hobo_mcd6_lit_pel, hobo_mcd6_lit_pel$year =="2019", !is.na(year)), alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_point(data=subset(hobo_mcd8_lit_pel, hobo_mcd8_lit_pel$year =="2019", !is.na(year)), alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_hline(yintercept=0) +
+  xlab("Julian Day")+
+  ylab("Temperature Comparison(°C)") +
+  guides (color = guide_legend(title="Littoral Logger")) +
+  ggtitle("Comparison of Littoral Temperature and Pelagic Temperature - 2019")
+
+
+ggplot()+
+  geom_point(data=subset(hobo_mcd6_lit_pel, hobo_mcd6_lit_pel$year =="2019", !is.na(year)), alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_point(data=subset(hobo_mcd8_lit_pel, hobo_mcd8_lit_pel$year =="2019", !is.na(year)), alpha= 0.1, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_hline(yintercept=0) +
+  xlab("Julian Day")+
+  ylab("Temperature Comparison(°C)") +
+  theme(legend.position = "none")
+
+#Further exploration 
+#Make a comp - date/hour per year 
+
+hobo_mcd6_lit_pel$day_hr <- paste(hobo_mcd6_lit_pel$yday, hobo_mcd6_lit_pel$hour, sep= ".")
+hobo_mcd8_lit_pel$day_hr <- paste(hobo_mcd8_lit_pel$yday, hobo_mcd8_lit_pel$hour, sep= ".")
+
+hobo_mcd6_lit_pel$diel_seq <- seq(from=1, to=17043)
+hobo_mcd8_lit_pel$diel_seq <- seq(from=1, to=17043)
+
+write.csv(hobo_mcd6_lit_pel,"C:\\Users\\Quinn\\Documents\\R\\BMWS\\mcd6_lit_pel_2.csv", row.names = FALSE)
+write.csv(hobo_mcd8_lit_pel,"C:\\Users\\Quinn\\Documents\\R\\BMWS\\mcd8_lit_pel_2.csv", row.names = FALSE)
+
+ggplot()+
+  geom_point(data=subset(hobo_mcd6_lit_pel, hobo_mcd6_lit_pel$year =="2019", !is.na(year)), alpha= 0.1, mapping = aes(x = day_hr, y =comp, color=(as.factor(logr)))) +
+  geom_hline(yintercept=0) +
+  xlab("x")+
+  ylab("Temperature Comparison(°C)") +
+  theme(legend.position = "none")
+
+#Goofin 
+
+ggplot()+
+  geom_point(data=mcd6_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =littoral, color=(as.factor(logr)))) +
+  geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =littoral, color=(as.factor(logr)))) +
+  #geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =pelagic_1)) + 
+  #geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =pelagic_3.5), col="blue") + 
+  ylab("Temperature")+
+  xlab("Hours")
+#+
+#  scale_color_manual(name = 'Logger', 
+#                      values =c("red", "lightblue", "black", "blue"), 
+#                      labels = c("Littoral6 - 1m", "Littoral8 - 1m", "Pelagic - 1m", "test"))
+#  
+#"red"="red", "lightblue"="lightblue", "black"="black", "blue"="blue"
+#"red", "lightblue", "black", "blue"
+
+
+ggplot()+
+  geom_point(data=mcd6_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =littoral, color=(as.factor(logr)))) +
+  geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =littoral, color=(as.factor(logr)))) +
+  geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =pelagic_1)) +
+  geom_vline(xintercept = seq(from=1, to=2808, by=24)) +
+  xlim(0,500) +
+  #ylim(13,23) +
+  ylab("Temperature")+
+  xlab("Hours") 
+
+ggplot()+
+  geom_point(data=mcd6_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =littoral, color=(as.factor(logr)))) +
+  geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =littoral, color=(as.factor(logr)))) +
+  geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =pelagic_1)) +
+  geom_vline(xintercept = seq(from=1, to=2808, by=24)) +
+  xlim(900,1100)+
+  ylim(16,25) +
+  ylab("Temperature")+
+  xlab("Hours") 
+
+
+ggplot()+
+  geom_point(data=mcd6_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =comp, color=(as.factor(logr)))) +
+  geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =comp, color=(as.factor(logr)))) + 
+  geom_vline(xintercept = seq(from=1, to=2808, by=24)) +
+  xlim(1300,1500)+
+  geom_hline(yintercept=0) +
+  ylab("Temperature comparison to pelagic ")+
+  xlab("Hours")
+
+#CCF testing 
+# Time lag may be indicative of internal movements, if not possibly general site characteristics 
+
+lit8<- mcd8_lit_pel_2$littoral
+lit6<- mcd6_lit_pel_2$littoral
+
+lit8_comp<- mcd8_lit_pel_2$comp
+lit6_comp<- mcd6_lit_pel_2$comp
+
+ccf(lit8, lit6, lag=10000, type="correlation")
+ccf(lit8, lit6, lag=3000, type="correlation")
+
+ccf(lit8_comp, lit6_comp, lag=1000)
