@@ -3,6 +3,7 @@ getwd()
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
+library(lubridate)
 read.csv(hobo_tempsum.csv)
 #I guess you need to import the dataset the manual way?
 
@@ -475,10 +476,14 @@ ggplot()+
 ggplot()+
   geom_point(data=mcd6_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =littoral, color=(as.factor(logr)))) +
   geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =littoral, color=(as.factor(logr)))) +
-  #geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =pelagic_1)) + 
-  #geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =pelagic_3.5), col="blue") + 
+  geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =pelagic_1)) + 
+  geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =pelagic_3.5), col="blue") + 
   ylab("Temperature")+
-  xlab("Hours")
+  xlab("Hours") + 
+  geom_vline(xintercept=385,lwd=1,colour="darkgrey") + 
+  geom_vline(xintercept=1105,lwd=1,colour="darkgrey") +
+  geom_vline(xintercept=1849,lwd=1,colour="darkgrey") +
+  geom_vline(xintercept=2593,lwd=1,colour="darkgrey") 
 #+
 #  scale_color_manual(name = 'Logger', 
 #                      values =c("red", "lightblue", "black", "blue"), 
@@ -531,3 +536,230 @@ ccf(lit8, lit6, lag=10000, type="correlation")
 ccf(lit8, lit6, lag=3000, type="correlation")
 
 ccf(lit8_comp, lit6_comp, lag=1000)
+
+
+
+####Annual thermocline viz####
+#2017
+hobo_mcd_pel_2017$date <- paste(hobo_mcd_pel_2017$year, "-0",hobo_mcd_pel_2017$month, "-",hobo_mcd_pel_2017$day)
+
+write.csv(hobo_mcd_pel_2017,"C:\\Users\\Quinn\\Documents\\R\\BMWS\\hobo_mcd_pel_2017_date.csv", row.names = FALSE)
+
+
+pel_2017 <- as.tibble(hobo_mcd_pel_2017_time)
+
+
+
+ggplot(pel_2017, aes(x = date, y = depth.m, colour = temp.c)) +
+  geom_point() +
+  scale_y_reverse() +
+  scale_colour_gradient2(
+    midpoint = 20, 
+    high = scales::muted("red"), 
+    low = scales::muted("blue")
+  )
+
+
+#Step 1
+estimate_temp_by_date <- function(target_date, target_depth) {
+  data_for_date <- pel_2017 %>% 
+    filter(date == target_date) %>%
+    arrange(depth.m)
+  approx(data_for_date$depth.m, data_for_date$temp.c, xout = target_depth)$y
+}
+estimate_temp_by_date(ymd("2017-06-29"), c(0.5, 2, 2.5))  
+
+
+#Step 2
+temp_interp_depth <- crossing(
+  # the same dates as sonde_tbl_1993
+  tibble(date = unique(pel_2017$date)),
+  # depths can now be any value
+  tibble(depth = seq(1, 3, length.out = 100))
+) %>%
+  group_by(date) %>%
+  mutate(temp = estimate_temp_by_date(date[1], depth))
+
+#Step 3
+estimate_temp_by_depth <- function(target_depth, target_date) {
+  data_for_depth <- temp_interp_depth %>% 
+    filter(depth == target_depth) %>%
+    arrange(date)
+  approx(data_for_depth$date, data_for_depth$temp, xout = target_date)$y
+}
+
+estimate_temp_by_depth(
+  target_depth = 1, 
+  target_date = seq(ymd("2017-06-01"), ymd("2017-06-29"), by = 1)
+)
+
+
+
+temp_raster <- crossing(
+  # dates can now be any value
+  tibble(date = seq(ymd("2017-05-26"), ymd("2017-09-01"), by = 1)),
+  # depths must be the same as in temp_interp_depth
+  tibble(depth = unique(temp_interp_depth$depth))
+) %>%
+  group_by(depth) %>%
+  mutate(temp = estimate_temp_by_depth(depth[1], date))
+
+ggplot(temp_raster, aes(date, depth, fill = temp)) +
+  geom_raster() +
+  scale_y_reverse() +
+  scale_fill_gradient2(
+    midpoint = 20, 
+    high = scales::muted("red"), 
+    low = scales::muted("blue")
+  ) +
+  coord_cartesian(expand = FALSE)
+
+
+#2018 
+hobo_mcd_pel_2018$date <- paste(hobo_mcd_pel_2018$year, "-0",hobo_mcd_pel_2018$month, "-",hobo_mcd_pel_2018$day)
+
+write.csv(hobo_mcd_pel_2018,"C:\\Users\\Quinn\\Documents\\R\\BMWS\\hobo_mcd_pel_2018_date.csv", row.names = FALSE)
+
+
+pel_2018 <- as.tibble(hobo_mcd_pel_2018_date)
+
+
+
+ggplot(pel_2018, aes(x = date, y = depth.m, colour = temp.c)) +
+  geom_point() +
+  scale_y_reverse() +
+  scale_colour_gradient2(
+    midpoint = 20, 
+    high = scales::muted("red"), 
+    low = scales::muted("blue")
+  )
+
+
+#Step 1
+estimate_temp_by_date_2 <- function(target_date, target_depth) {
+  data_for_date <- pel_2018 %>% 
+    filter(date == target_date) %>%
+    arrange(depth.m)
+  approx(data_for_date$depth.m, data_for_date$temp.c, xout = target_depth)$y
+}
+estimate_temp_by_date_2(ymd("2018-06-29"), c(1, 2))  
+
+
+#Step 2
+temp_interp_depth_2 <- crossing(
+  # the same dates as sonde_tbl_1993
+  tibble(date = unique(pel_2018$date)),
+  # depths can now be any value
+  tibble(depth = seq(1, 3.5, length.out = 100))
+) %>%
+  group_by(date) %>%
+  mutate(temp = estimate_temp_by_date_2(date[1], depth))
+
+#Step 3
+estimate_temp_by_depth_2 <- function(target_depth, target_date) {
+  data_for_depth <- temp_interp_depth_2 %>% 
+    filter(depth == target_depth) %>%
+    arrange(date)
+  approx(data_for_depth$date, data_for_depth$temp, xout = target_date)$y
+}
+
+estimate_temp_by_depth_2(
+  target_depth = 1, 
+  target_date = seq(ymd("2018-06-01"), ymd("2018-06-29"), by = 1)
+)
+
+
+
+temp_raster_2 <- crossing(
+  # dates can now be any value
+  tibble(date = seq(ymd("2018-05-04"), ymd("2018-09-11"), by = 1)),
+  # depths must be the same as in temp_interp_depth
+  tibble(depth = unique(temp_interp_depth_2$depth))
+) %>%
+  group_by(depth) %>%
+  mutate(temp = estimate_temp_by_depth_2(depth[1], date))
+
+ggplot(temp_raster_2, aes(date, depth, fill = temp)) +
+  geom_raster() +
+  scale_y_reverse() +
+  scale_fill_gradient2(
+    midpoint = 20, 
+    high = scales::muted("red"), 
+    low = scales::muted("blue")
+  ) +
+  coord_cartesian(expand = FALSE)
+
+
+#2019
+hobo_mcd_pel_2019$date <- paste(hobo_mcd_pel_2019$year, "-0",hobo_mcd_pel_2019$month, "-",hobo_mcd_pel_2019$day)
+
+write.csv(hobo_mcd_pel_2019,"C:\\Users\\Quinn\\Documents\\R\\BMWS\\hobo_mcd_pel_2019_date.csv", row.names = FALSE)
+
+
+pel_2019 <- as.tibble(hobo_mcd_pel_2019_date)
+
+
+
+ggplot(pel_2019, aes(x = date, y = depth.m, colour = temp.c)) +
+  geom_point() +
+  scale_y_reverse() +
+  scale_colour_gradient2(
+    midpoint = 20, 
+    high = scales::muted("red"), 
+    low = scales::muted("blue")
+  )
+
+
+#Step 1
+estimate_temp_by_date_3 <- function(target_date, target_depth) {
+  data_for_date <- pel_2019 %>% 
+    filter(date == target_date) %>%
+    arrange(depth.m)
+  approx(data_for_date$depth.m, data_for_date$temp.c, xout = target_depth)$y
+}
+estimate_temp_by_date_3(ymd("2019-06-29"), c(1, 2))  
+
+
+#Step 2
+temp_interp_depth_3 <- crossing(
+  # the same dates as sonde_tbl_1993
+  tibble(date = unique(pel_2019$date)),
+  # depths can now be any value
+  tibble(depth = seq(1, 3.5, length.out = 100))
+) %>%
+  group_by(date) %>%
+  mutate(temp = estimate_temp_by_date_3(date[1], depth))
+
+#Step 3
+estimate_temp_by_depth_3 <- function(target_depth, target_date) {
+  data_for_depth <- temp_interp_depth_3 %>% 
+    filter(depth == target_depth) %>%
+    arrange(date)
+  approx(data_for_depth$date, data_for_depth$temp, xout = target_date)$y
+}
+
+estimate_temp_by_depth_3(
+  target_depth = 1, 
+  target_date = seq(ymd("2019-06-01"), ymd("2019-06-29"), by = 1)
+)
+
+
+
+temp_raster_3 <- crossing(
+  # dates can now be any value
+  tibble(date = seq(ymd("2019-05-16"), ymd("2019-09-09"), by = 1)),
+  # depths must be the same as in temp_interp_depth
+  tibble(depth = unique(temp_interp_depth_3$depth))
+) %>%
+  group_by(depth) %>%
+  mutate(temp = estimate_temp_by_depth_3(depth[1], date))
+
+ggplot(temp_raster_3, aes(date, depth, fill = temp)) +
+  geom_raster() +
+  scale_y_reverse() +
+  scale_fill_gradient2(
+    midpoint = 15, 
+    high = scales::muted("red"), 
+    low = scales::muted("blue")
+  ) +
+  coord_cartesian(expand = FALSE)
