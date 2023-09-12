@@ -764,14 +764,3 @@ ggplot(temp_raster_3, aes(date, depth, fill = temp)) +
   ) +
   coord_cartesian(expand = FALSE)
 
-####2023 Data#### 
-
-#McD
-ggplot(data = McDermott_littoral_trim) + 
-  geom_point(mapping = aes(x = date, y =temp)) +
-  facet_wrap(~common_ID)
-
-#SP
-ggplot(data = McDermott_littoral_trim) + 
-  geom_point(mapping = aes(x = date, y =temp)) +
-  facet_wrap(~common_ID)
