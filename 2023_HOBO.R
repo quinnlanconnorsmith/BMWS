@@ -29,24 +29,36 @@ ggplot(data = McDermott_litpel_comp) +
   geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_5_temp), color="orange") +
   geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_6_temp), color="pink") +
   geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_7_temp), color="brown") +
-  geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_10_temp), color="cyan") +
-  geom_vline(xintercept = seq(from=1, to=10000, by=96)) 
+  geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_10_temp), color="cyan") #+
+  #geom_vline(xintercept = seq(from=1, to=10000, by=96)) 
 
 
 #Comp to pelagic temp 
 #2 and 6 are half meter
 ggplot(data = McDermott_litpel_comp) + 
-  geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_1_comp), col="blue") +
+  #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_1_comp), col="blue") +
   #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_2_comp), col="green") +
-  geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_3_comp), color="yellow") +
-  geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_4_comp), color="purple") +
-  geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_5_comp), color="orange") +
-  #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_6_comp), color="pink") +
+  #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_3_comp), color="yellow") +
+  #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_4_comp), color="purple") +
+  #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_5_comp), color="orange") +
+  #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_6_comp), color="black") +
   geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_7_comp), color="brown") +
   geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_10_comp), color="cyan") +
-  xlim(0,1000) 
+  xlim(0,4000) 
 
+#Highlight 
+ggplot(data = McDermott_litpel_comp) + 
+  geom_point(alpha=0.01,mapping = aes(x = sample, y =McD_1_comp), col="blue") +
+  #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_2_comp), col="green") +
+  geom_point(alpha=0.01,mapping = aes(x = sample, y =McD_3_comp), color="yellow") +
+  geom_point(alpha=0.01,mapping = aes(x = sample, y =McD_4_comp), color="purple") +
+  geom_point(alpha=0.01,mapping = aes(x = sample, y =McD_5_comp), color="orange") +
+  #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_6_comp), color="pink") +
+  geom_point(alpha=0.01,mapping = aes(x = sample, y =McD_7_comp), color="brown") +
+  geom_point(mapping = aes(x = sample, y =McD_10_comp), color="cyan") #+
+#xlim(0,1000) 
 
+#Zooming in 
 ggplot(data = McDermott_litpel_comp) + 
   geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_1_comp), col="blue") +
   #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_2_comp), col="green") +
@@ -71,6 +83,19 @@ ggplot(data = McDermott_litpel_comp) +
   #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_6_comp), color="pink") +
   geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_7_comp), color="brown") +
   geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_10_comp), color="cyan") +
+  xlim(2000,2500)+
+  geom_vline(xintercept = seq(from=1, to=10000, by=96)) 
+
+#Highlight cool stuff 
+ggplot(data = McDermott_litpel_comp) + 
+  geom_point(alpha=0.1,mapping = aes(x = sample, y =McD_1_comp), col="blue") +
+  #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_2_comp), col="green") +
+  geom_point(alpha=0.1,mapping = aes(x = sample, y =McD_3_comp), color="yellow") +
+  geom_point(alpha=0.1,mapping = aes(x = sample, y =McD_4_comp), color="purple") +
+  geom_point(alpha=0.1,mapping = aes(x = sample, y =McD_5_comp), color="orange") +
+  #geom_point(alpha=0.5,mapping = aes(x = sample, y =McD_6_comp), color="pink") +
+  geom_point(alpha=0.1,mapping = aes(x = sample, y =McD_7_comp), color="brown") +
+  geom_point(mapping = aes(x = sample, y =McD_10_comp), color="cyan") +
   xlim(2000,2500)+
   geom_vline(xintercept = seq(from=1, to=10000, by=96)) 
 
