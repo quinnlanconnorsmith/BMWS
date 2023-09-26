@@ -764,3 +764,149 @@ ggplot(temp_raster_3, aes(date, depth, fill = temp)) +
   ) +
   coord_cartesian(expand = FALSE)
 
+
+####Pretty figs for presentations#### 
+
+tiff("mcd6", units="in", width=12, height=12, res=600)
+grid.arrange(raw_d, gg4, ncol=2)
+dev.off()
+
+
+mcd6 <- ggplot(data=subset(hobo_mcd6_lit_pel, !is.na(year))) +
+  geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
+  geom_abline(y=1) +
+  ylab("Littoral 1m Temperature(°C)") +
+  xlab("Pelagic 1m Temperature(°C)") +
+  ggtitle("McDermott East Site") +
+  ylim(5,30) +
+  xlim(5,30) +
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+           axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20))
+mcd6
+
+
+tiff("mcd6.tiff", units="in", width=8, height=8, res=600)
+mcd6
+dev.off()
+
+
+mcd7 <- ggplot(data=hobo_mcd7_lit_pel) +
+  geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
+  geom_abline(y=1) +
+  ylab("Littoral 1m Temperature(°C)") +
+  xlab("Pelagic 1m Temperature(°C)") +
+  ggtitle("McDermott West Site") +
+  ylim(5,30) +
+  xlim(5,30) +
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20))
+mcd7
+
+tiff("mcd7.tiff", units="in", width=8, height=8, res=600)
+mcd7
+dev.off()
+
+mcd8 <- ggplot(data=hobo_mcd8_lit_pel) +
+  geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
+  geom_abline(y=1)+
+  ylab("Littoral 1m Temperature(°C)") +
+  xlab("Pelagic 1m Temperature(°C)") +
+  ggtitle("McDermott South Site") +
+  ylim(5,30) +
+  xlim(5,30) +
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20))
+mcd8
+
+tiff("mcd8.tiff", units="in", width=8, height=8, res=600)
+mcd8
+dev.off()
+
+mcd8y <- ggplot(data=hobo_mcd8_lit_pel) +
+  geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
+  geom_abline(y=1)+
+  facet_wrap(~year) +
+  ylab("Littoral 1m Temperature(°C)") +
+  xlab("Pelagic 1m Temperature(°C)") +
+  ggtitle("McDermott South Site - Annual") +
+  ylim(5,30) +
+  xlim(5,30) +
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20))
+mcd8y
+tiff("mcd8y.tiff", units="in", width=8, height=8, res=600)
+mcd8y
+dev.off()
+
+
+mcd8h <- ggplot(data=subset(hobo_mcd8_lit_pel, hobo_mcd8_lit_pel$year =="2019", !is.na(year))) +
+  geom_point(mapping = aes(x = pelagic_1, y =littoral, color=hour)) +
+  geom_abline(y=1)+
+  facet_wrap(~hour) +
+  ylab("Littoral 1m Temperature(°C)") +
+  xlab("Pelagic 1m Temperature(°C)") +
+  ggtitle("McDermott South Site 2019 - Hourly") +
+  ylim(5,30) +
+  xlim(5,30) +
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20))
+
+mcd8h
+tiff("mcd8h.tiff", units="in", width=8, height=8, res=600)
+mcd8h
+dev.off()
+
+
+
+
+#Famous comparison graph
+comp <- ggplot()+
+  geom_point(data=subset(hobo_mcd6_lit_pel, hobo_mcd6_lit_pel$year =="2019", !is.na(year)), alpha= 0.5, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_point(data=subset(hobo_mcd8_lit_pel, hobo_mcd8_lit_pel$year =="2019", !is.na(year)), alpha= 0.5, mapping = aes(x = yday, y =comp, color=(as.factor(logr)))) +
+  geom_hline(yintercept=0) +
+  xlab("Julian Day")+
+  ylab("Temperature Comparison(°C)") +
+  guides (color = guide_legend(title="Littoral Logger")) +
+  geom_vline(xintercept=152,lwd=2,colour="darkgrey") + 
+  geom_vline(xintercept=182,lwd=2,colour="darkgrey") +
+  geom_vline(xintercept=213,lwd=2,colour="darkgrey") +
+  geom_vline(xintercept=244,lwd=2,colour="darkgrey") +
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20),legend.title = element_text(size=16),legend.key.size = unit(2, 'cm'), legend.text = element_text(size=20))
+  #ggtitle("Comparison of Littoral Temperature and Pelagic Temperature - 2019")
+comp
+
+tiff("comp.tiff", units="in", width=12, height=8, res=600)
+comp
+dev.off()
+
+
+mcd2019 <- ggplot()+
+  geom_point(data=mcd6_lit_pel_2, alpha= 0.5, mapping = aes(x = yday, y =littoral, color=(as.factor(logr)))) +
+  geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = yday, y =littoral, color=(as.factor(logr)))) +
+  geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = yday, y =pelagic_1)) + 
+  #geom_point(data=mcd8_lit_pel_2, alpha= 0.5, mapping = aes(x = seq, y =pelagic_3.5), col="blue") + 
+  ylab("Temperature(°C)")+
+  xlab("Julian Day") + 
+  geom_vline(xintercept=152,lwd=2,colour="darkgrey") + 
+  geom_vline(xintercept=182,lwd=2,colour="darkgrey") +
+  geom_vline(xintercept=213,lwd=2,colour="darkgrey") +
+  geom_vline(xintercept=244,lwd=2,colour="darkgrey") +
+  guides(color=guide_legend(title="Littoral Logger")) +
+  scale_fill_discrete(name = "New Legend Title") +
+  ggtitle("McDermott 2019 - 1m") +
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20), legend.title = element_text(size=16),legend.key.size = unit(2, 'cm'), legend.text = element_text(size=20))
+mcd2019
+
+
+tiff("mcd2019.tiff", units="in", width=10, height=8, res=600)
+mcd2019
+dev.off()
