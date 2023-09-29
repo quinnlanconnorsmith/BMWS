@@ -520,6 +520,102 @@ ggplot(data = Escanaba_litpel_comp) +
   geom_line(alpha=0.5,mapping = aes(x = sample, y =ES_11_compt), col="green") +
   geom_line(alpha=0.5,mapping = aes(x = sample, y =ES_12_compt), color="lightyellow") +
   ylim(-3,4)
+#### Ben V weedage goodies####
+ggplot(data = McDermott_litpel_comp) + 
+  geom_line(alpha=1,mapping = aes(x = sample, y =McD_1_comp), col="#1B9E77", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =McD_3_comp), color="skyblue", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =McD_4_comp), color="#7570B3", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =McD_5_comp), color="#E7298A", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =McD_7_comp), color="#66A61E", lwd=1) +
+  geom_line(alpha=1,mapping = aes(x = sample, y =McD_10_comp), color="tomato", lwd=1) +
+  ylab("Temperature Comparison to Pelagic (°C)")+
+  xlab("Sample") + 
+  xlim(3000,4000)+
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20), legend.title = element_text(size=16)) 
+  #geom_vline(xintercept = seq(from=1, to=10000, by=96), color = "darkgrey", lwd=2) 
+
+ggplot(data = McDermott_litpel_comp) + 
+  geom_line(alpha=1,mapping = aes(x = sample, y =McD_1_temp), col="#1B9E77", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =McD_3_temp), color="skyblue", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =McD_4_temp), color="#7570B3", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =McD_5_temp), color="#E7298A", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =McD_7_temp), color="#66A61E", lwd=1) +
+  geom_line(alpha=1,mapping = aes(x = sample, y =McD_10_temp), color="tomato", lwd=1) +
+  ylab("Temperature (°C)")+
+  xlab("Sample") + 
+  xlim(2000,2500)+
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20), legend.title = element_text(size=16)) +
+  ylim(16,24)
+#geom_vline(xintercept = seq(from=1, to=10000, by=96), color = "darkgrey", lwd=2) 
+
+ggplot(data = Sparkling_litpel_comp) + 
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =SP_3_compt), col="#1B9E77", lwd=1) +
+  geom_line(alpha=1,mapping = aes(x = sample, y =SP_4_compt), color="skyblue", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =SP_5_compt), color="#E7298A", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =SP_6_compt), color="#66A61E", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =SP_7_compt), color="tomato", lwd=1) +
+  ylab("Temperature Comparison to Pelagic (°C)")+
+  xlab("Sample") + 
+  xlim(2000,2500)+
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20), legend.title = element_text(size=16)) +
+  geom_hline(yintercept=0)
+
+ggplot(data = Sparkling_litpel_comp) + 
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =SP_3_temp), col="#1B9E77", lwd=1) +
+  geom_line(alpha=1,mapping = aes(x = sample, y =SP_4_temp), color="skyblue", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =SP_5_temp), color="#E7298A", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =SP_6_temp), color="#66A61E", lwd=1) +
+  geom_line(alpha=0.2,mapping = aes(x = sample, y =SP_7_temp), color="tomato", lwd=1) +
+  ylab("Temperature (°C)")+
+  xlab("Sample") + 
+  xlim(2000,2500)+
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20), legend.title = element_text(size=16)) +
+  ylim(16,23)
+
+ggplot(data = Escanaba_litpel_comp) + 
+  geom_line(alpha = 0.2, mapping = aes(x = sample, y =ES_1_compt), col="#1B9E77", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_3_compt), color="skyblue", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_4_compt), color="#7570B3", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_5_compt), color="#E7298A", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_6_compt), color="#66A61E", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_8_compt), color="tomato", lwd=1) +
+  geom_line(alpha = 1,mapping = aes(x = sample, y =ES_10_compt), color="black", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_11_compt), color="lightgoldenrod3", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_12_compt), color="indianred", lwd=1) +
+  ylab("Temperature Comparison to Pelagic (°C)")+
+  xlab("Sample") + 
+  xlim(2000,2500)+
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20), legend.title = element_text(size=16)) +
+  geom_hline(yintercept=0) 
+
+ggplot(data = Escanaba_litpel_comp) + 
+  geom_line(alpha = 0.2, mapping = aes(x = sample, y =ES_1_temp), col="#1B9E77", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_3_temp), color="skyblue", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_4_temp), color="#7570B3", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_5_temp), color="#E7298A", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_6_temp), color="#66A61E", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_8_temp), color="tomato", lwd=1) +
+  geom_line(alpha = 1,mapping = aes(x = sample, y =ES_10_temp), color="black", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_11_temp), color="lightgoldenrod3", lwd=1) +
+  geom_line(alpha = 0.2,mapping = aes(x = sample, y =ES_12_temp), color="indianred", lwd=1) +
+  ylab("Temperature (°C)")+
+  xlab("Sample") + 
+  xlim(2000,2500)+
+  theme_bw()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20), legend.title = element_text(size=16)) +
+  geom_hline(yintercept=0) +
+  ylim(16,23)
 
 ####For Presentations####
 
@@ -648,7 +744,8 @@ mcd_c1 <- ggplot(data = McDermott_litpel_comp) +
   theme(axis.text=element_text(size=12),
         axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20), legend.title = element_text(size=16)) +
   geom_vline(xintercept = seq(from=1, to=10000, by=96), color = "darkgrey", lwd=2) +
-  geom_hline(yintercept=0)
+  geom_hline(yintercept=0) +
+  ylim(-3,5)
 mcd_c1
 
 mcd_c2 <- ggplot(data = McDermott_litpel_comp) + 
@@ -732,7 +829,8 @@ sp_c1 <- ggplot(data = Sparkling_litpel_comp) +
   theme(axis.text=element_text(size=12),
         axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20), legend.title = element_text(size=16)) +
   geom_vline(xintercept = seq(from=1, to=10000, by=96), color = "darkgrey", lwd=2) +
-  geom_hline(yintercept=0)
+  geom_hline(yintercept=0) +
+  ylim(-3,5)
 sp_c1
 
 
@@ -816,7 +914,8 @@ es_c1 <- ggplot(data = Escanaba_litpel_comp) +
   theme(axis.text=element_text(size=12),
         axis.title=element_text(size=14,face="bold"), plot.title=element_text(size=20), legend.title = element_text(size=16)) +
   geom_vline(xintercept = seq(from=1, to=10000, by=96), color = "darkgrey", lwd=2) +
-  geom_hline(yintercept=0)
+  geom_hline(yintercept=0) +
+  ylim(-3,5)
 es_c1
 
 
